@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RetAil.Contracts\RetAil.Contracts.csproj" />
+      <ProjectReference Include="..\RetAil.Dal\RetAil.Dal.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Altasoft.IdentityModel.Tokens.Jwt" Version="1.0.1" />
+      <PackageReference Include="BCrypt.Net" Version="0.1.0" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.28.1" />
+    </ItemGroup>
+
+</Project>
