@@ -18,4 +18,9 @@ public class UserProvider : BaseProvider<UserEntity>, IUserProvider
     {
         return await _applicationContext.Users.FirstOrDefaultAsync(x => x.Login == login);
     }
+
+    public async Task<UserEntity?> GetByPassword(string passwordHash)
+    {
+        return await _applicationContext.Users.FirstOrDefaultAsync(x => x.PasswordHash==passwordHash);
+    }
 }

@@ -24,4 +24,15 @@ public class AuthController : ControllerBase
             Password = userSignUpViewModel.Password
         }));
     }
+
+    [HttpPost("api/user/signin")]
+    public async Task<IActionResult> Login([FromBody] UserSignInViewModel userSignInViewModel)
+    {
+        return Ok(await _authService.SignIn(new UserSignInDto
+        {
+            Username = userSignInViewModel.Username,
+            Login = userSignInViewModel.Login,
+            Password = userSignInViewModel.Password
+        }));
+    }
 }

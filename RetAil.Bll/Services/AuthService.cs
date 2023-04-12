@@ -37,6 +37,21 @@ public class AuthService : IAuthService
         return GenerateToken(userSignUpDto.Login, userSignUpDto.Username);
     }
 
+    public async Task<string> SignIn(UserSignInDto userSignInDto)
+    {
+        if (_userProvider.GetByLogin(userSignInDto.Login) != _userProvider.GetByPassword(userSignInDto.Password))
+        {
+            throw new ArgumentException("error, passport is not correct");
+        }
+        if(_userProvider.GetByLogin(userSignInDto.Login)==null)
+        {
+            throw new ArgumentException("error, Login is not found");
+        }
+        
+        return GenerateToken(userSignInDto.Login, userSignInDto.Username);
+
+    }
+
     private string GenerateToken(string login, string username)
     {
         var key = Encoding.ASCII.GetBytes(_secretOptions.JwtSecret);
@@ -50,7 +65,7 @@ public class AuthService : IAuthService
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key), 
-                SecurityAlgorithms.HmacSha256Signature)
+                SecurityAlgorithms.HmacSha256)
         };
     
         var tokenHandler = new JwtSecurityTokenHandler();
