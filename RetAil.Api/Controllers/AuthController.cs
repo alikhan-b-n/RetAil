@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using RetAil.Api.VIewModels;
 using RetAil.Bll.Dtos;
 using RetAil.Bll.Services.Abstract;
@@ -18,12 +20,21 @@ public class AuthController : ControllerBase
     [HttpPost("api/user/signup")]
     public async Task<IActionResult> Register([FromBody] UserSignUpViewModel userSignUpViewModel)
     {
-        return Ok(await _authService.SignUp(new UserSignUpDto
+        string success;
+        try
         {
-            Username = userSignUpViewModel.Username,
-            Login = userSignUpViewModel.Login,
-            Password = userSignUpViewModel.Password
-        }));
+            success= await _authService.SignUp(new UserSignUpDto
+            {
+                Username = userSignUpViewModel.Username,
+                Login = userSignUpViewModel.Login,
+                Password = userSignUpViewModel.Password
+            });
+        }
+        catch (Exception e)
+        {
+            return BadRequest("Error");
+        }
+        return Ok(success);
     }
 
     [HttpPost("api/user/signin")]
@@ -43,5 +54,22 @@ public class AuthController : ControllerBase
             return BadRequest("Not found");
         }
         return Ok(success);
+    }
+    
+    
+    [Authorize]
+    [HttpGet("api/user/get")]
+
+    public async Task<IActionResult> GetUser()
+    {
+        try
+        {
+            
+            return Ok(await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!));
+        }
+        catch (Exception e)
+        {
+            return NotFound("User is not found, wrong token");
+        }
     }
 }

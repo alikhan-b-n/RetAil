@@ -14,11 +14,13 @@ namespace RetAil.Bll.Services;
 public class AuthService : IAuthService
 {
     private readonly IUserProvider _userProvider;
+    private readonly IUserService _userService;
     private readonly SecretOptions _secretOptions;
 
-    public AuthService(IUserProvider userProvider, IOptions<SecretOptions> secretOptions)
+    public AuthService(IUserProvider userProvider, IOptions<SecretOptions> secretOptions, IUserService userService)
     {
         _userProvider = userProvider;
+        _userService = userService;
         _secretOptions = secretOptions.Value;
     }
 
@@ -49,8 +51,15 @@ public class AuthService : IAuthService
         }
         
         throw new ArgumentException("error, passport is not correct");
-
     }
+
+    public async Task<UserDto> GetUserByHeader(string[] headers)
+    {
+        var token = headers[0].Replace("Bearer ", "");
+        var login = DecryptToken(token).Login;
+
+        return await _userService.GetUserByLogin(login);
+    } 
 
     private string GenerateToken(string? login, string? username)
     {
@@ -71,5 +80,19 @@ public class AuthService : IAuthService
         var tokenHandler = new JwtSecurityTokenHandler();
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(securityToken);
+    }
+    
+    private (string Login, string Username) DecryptToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+
+        var tokenS = handler.ReadToken(token) as JwtSecurityToken;
+
+        if (tokenS?.Claims is List<Claim> claims)
+        {
+            return new ValueTuple<string, string>(claims[0].Value, claims[1].Value);
+        }
+
+        throw new ArgumentException();
     }
 }
