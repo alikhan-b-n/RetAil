@@ -14,7 +14,7 @@ public class UserProvider : BaseProvider<UserEntity>, IUserProvider
     }
 
 
-    public async Task<UserEntity?> GetByLogin(string login)
+    public async Task<UserEntity?> GetByLogin(string? login)
     {
         return await _applicationContext.Users.FirstOrDefaultAsync(x => x.Login == login);
     }

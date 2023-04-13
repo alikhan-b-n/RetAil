@@ -39,20 +39,20 @@ public class AuthService : IAuthService
 
     public async Task<string> SignIn(UserSignInDto userSignInDto)
     {
-        if (_userProvider.GetByLogin(userSignInDto.Login) != _userProvider.GetByPassword(userSignInDto.Password))
+        var userEntity = await _userProvider.GetByLogin(userSignInDto.Login);
+        if (userEntity == null) throw new ArgumentException("error, login is not found");
+        var user = userEntity;
+        
+        if (BCrypt.Net.BCrypt.Verify(userSignInDto.Password, user?.PasswordHash))
         {
-            throw new ArgumentException("error, passport is not correct");
-        }
-        if(_userProvider.GetByLogin(userSignInDto.Login)==null)
-        {
-            throw new ArgumentException("error, Login is not found");
+            return GenerateToken(userSignInDto.Login, user?.Username);
         }
         
-        return GenerateToken(userSignInDto.Login, userSignInDto.Username);
+        throw new ArgumentException("error, passport is not correct");
 
     }
 
-    private string GenerateToken(string login, string username)
+    private string GenerateToken(string? login, string? username)
     {
         var key = Encoding.ASCII.GetBytes(_secretOptions.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using RetAil.Api.VIewModels;
 using RetAil.Bll.Dtos;
 using RetAil.Bll.Services.Abstract;
+using BadHttpRequestException = Microsoft.AspNetCore.Server.IIS.BadHttpRequestException;
 
 namespace RetAil.Api.Controllers;
 
@@ -28,11 +29,19 @@ public class AuthController : ControllerBase
     [HttpPost("api/user/signin")]
     public async Task<IActionResult> Login([FromBody] UserSignInViewModel userSignInViewModel)
     {
-        return Ok(await _authService.SignIn(new UserSignInDto
+        string success;
+        try
         {
-            Username = userSignInViewModel.Username,
-            Login = userSignInViewModel.Login,
-            Password = userSignInViewModel.Password
-        }));
+            success =await _authService.SignIn(new UserSignInDto
+            {
+                Login = userSignInViewModel.Login,
+                Password = userSignInViewModel.Password
+            });
+        }
+        catch (Exception e)
+        {
+            return BadRequest("Not found");
+        }
+        return Ok(success);
     }
 }
