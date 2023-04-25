@@ -4,7 +4,6 @@ using Microsoft.Net.Http.Headers;
 using RetAil.Api.VIewModels;
 using RetAil.Bll.Dtos;
 using RetAil.Bll.Services.Abstract;
-using BadHttpRequestException = Microsoft.AspNetCore.Server.IIS.BadHttpRequestException;
 
 namespace RetAil.Api.Controllers;
 
@@ -64,7 +63,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            
+            ///Save for future projects
             return Ok(await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!));
         }
         catch (Exception e)

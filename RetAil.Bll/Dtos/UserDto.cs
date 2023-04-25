@@ -1,3 +1,8 @@
 namespace RetAil.Bll.Dtos;
 
-public record UserDto(Guid Id, string Login, string Username);
+public class UserDto
+{
+    public Guid Id { get; set; }
+    public string Userame { get; set; }
+    public string Login { get; set; }
+}

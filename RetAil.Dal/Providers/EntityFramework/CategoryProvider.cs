@@ -8,9 +8,13 @@ public class CategoryProvider : BaseProvider<CategoryEntity>, ICategoryProvider
 {
     private readonly ApplicationContext _applicationContext;
 
-    public CategoryProvider(ApplicationContext _applicationContext) : base(_applicationContext)
+    public CategoryProvider(ApplicationContext applicationContext) : base(applicationContext)
     {
-        this._applicationContext = _applicationContext;
+        this._applicationContext = applicationContext;
     }
-    
+
+    public async Task<List<CategoryEntity>> GetAllById(Guid id)
+    {
+        return await _applicationContext.CategoryEntities.Where(x => x.UserEntity.Id == id).ToListAsync();
+    }
 }

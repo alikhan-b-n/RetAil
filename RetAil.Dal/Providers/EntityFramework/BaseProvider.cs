@@ -41,6 +41,8 @@ namespace RetAil.Dal.Providers.EntityFramework
         public async Task Delete(Guid id)
         {
              _dbSet.Remove(_dbSet.First(x => x.Id == id));
+             await _applicationContext.SaveChangesAsync();
+
         }
     }
 }

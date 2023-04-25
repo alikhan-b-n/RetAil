@@ -17,14 +17,20 @@ public class UserService : IUserService
     {
         var user = await _userProvider.GetById(id);
 
-        return new UserDto(user.Id, user.Login, user.Username);
+        return new UserDto
+        {
+            Id = user.Id, Login = user.Login, Userame = user.Username
+        };
     }
 
     public async Task<UserDto> GetUserByLogin(string login)
     {
         var user = await _userProvider.GetByLogin(login);
         if (user == null) throw new Exception("user not found");
-        
-        return new UserDto(user.Id, user.Login, user.Username);
+
+        return new UserDto
+        {
+            Id = user.Id, Login = user.Login, Userame = user.Username
+        };
     }
 }

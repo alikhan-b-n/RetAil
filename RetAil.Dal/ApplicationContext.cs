@@ -12,4 +12,6 @@ public class ApplicationContext : DbContext
 
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<CategoryEntity> CategoryEntities { get; set; }
+    public DbSet<ProductEntity> ProductEntities { get; set; }
+    
 }
