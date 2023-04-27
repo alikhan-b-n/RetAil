@@ -6,4 +6,6 @@ public class CategoryDto
     public Guid Id { get; set; }
 
     public Guid UserId { get; set; }
+    
+    public List<ProductDto> ProductDtos { get; set; }
 }

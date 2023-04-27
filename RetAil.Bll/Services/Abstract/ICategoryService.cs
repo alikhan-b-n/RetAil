@@ -9,5 +9,6 @@ public interface ICategoryService
     Task<List<CategoryDto>> GetAll(Guid userId);
     Task Update(CategoryDto categoryDto);
     Task Delete(Guid id, Guid userId);
-    
+    public Task<List<ProductDto>> GetAllProducts(Guid id, Guid userId);
+
 }

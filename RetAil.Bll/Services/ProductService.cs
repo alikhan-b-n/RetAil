@@ -9,24 +9,30 @@ public class ProductService : IProductService
 {
     private readonly IProductProvider _productProvider;
     private readonly IUserProvider _userProvider;
+    private readonly ICategoryProvider _categoryProvider;
 
-    public ProductService(IProductProvider productProvider, IUserProvider userProvider)
+    public ProductService(IProductProvider productProvider, IUserProvider userProvider, ICategoryProvider categoryProvider)
     {
         _productProvider = productProvider;
         _userProvider = userProvider;
+        _categoryProvider = categoryProvider;
     }
 
     public async Task<Guid> Create(ProductDto productDto)
     {
         var userEntity = await _userProvider.GetById(productDto.UserId);
-        ProductEntity productEntity = new ProductEntity
+        var categoryEntity = await _categoryProvider.GetById(productDto.CategoryId);
+        ProductEntity? productEntity = new ProductEntity
         {
             Title = productDto.Title,
             Details = productDto.Details,
             Price = productDto.Price,
-            UserEntity = userEntity
+            UserEntity = userEntity,
+            CategoryEntity = categoryEntity
         };
         await _productProvider.Create(productEntity);
+        categoryEntity.ProductEntities.Add(productEntity);
+        await _categoryProvider.Update(categoryEntity);
         return productEntity.Id;
     }
 

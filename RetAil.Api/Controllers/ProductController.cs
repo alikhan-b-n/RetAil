@@ -14,11 +14,13 @@ public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
     private readonly IAuthService _authService;
+    private readonly ICategoryService _categoryService;
 
-    public ProductController(IProductService productService, IAuthService authService)
+    public ProductController(IProductService productService, IAuthService authService, ICategoryService categoryService)
     {
         _productService = productService;
         _authService = authService;
+        _categoryService = categoryService;
     }
 
     [HttpGet("api/products")]
@@ -53,15 +55,16 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost("api/products")]
-    public async Task<IActionResult> Create([FromBody] ProductParams productParams)
+    public async Task<IActionResult> Create([FromBody] ProductParameter productParameter)
     {
         var User = await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!);
         var id = await _productService.Create(new ProductDto
         {
-            Title = productParams.Title,
-            Details = productParams.Details,
-            Price = productParams.Price,
-            UserId = User.Id
+            Title = productParameter.Title,
+            Details = productParameter.Details,
+            Price = productParameter.Price,
+            UserId = User.Id,
+            CategoryId = productParameter.CategoryId
         });
         return Ok(new 
         {
@@ -70,7 +73,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut("api/products/{id:guid}")]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ProductParams productParams)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ProductParameter productParameter)
     {
         var User = await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!);
         try
@@ -78,9 +81,9 @@ public class ProductController : ControllerBase
             await _productService.Update(new ProductDto
             {
                 Id = id,
-                Title = productParams.Title,
-                Details = productParams.Details,
-                Price = productParams.Price,
+                Title = productParameter.Title,
+                Details = productParameter.Details,
+                Price = productParameter.Price,
                 UserId = User.Id
             });
             return Ok("Success");

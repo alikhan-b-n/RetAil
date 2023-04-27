@@ -8,4 +8,5 @@ public class ProductEntity : BaseEntity
 
     public UserEntity UserEntity { get; set; }
 
+    public virtual CategoryEntity CategoryEntity { get; set; }
 }

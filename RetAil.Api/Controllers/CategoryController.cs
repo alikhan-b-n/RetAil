@@ -55,12 +55,12 @@ public class CategoryController : ControllerBase
 
     [Authorize]
     [HttpPost("api/categories")]
-    public async Task<IActionResult> Create([FromBody] CategoryParams categoryParams)
+    public async Task<IActionResult> Create([FromBody] CategoryParameter categoryParameter)
     {
         var userId = await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!);
         var id = await _categoryService.Create(new CategoryDto
         {
-            Name = categoryParams.Name,
+            Name = categoryParameter.Name,
             UserId = userId.Id
         });
         return Ok(new
@@ -84,17 +84,18 @@ public class CategoryController : ControllerBase
         }
     }
     [Authorize]
-    [HttpPut("api/category/{id:guid}")]
-    public async Task<IActionResult> Update(CategoryParams categoryParams, [FromRoute] Guid id)
+    [HttpPut("api/categories/{id:guid}")]
+    public async Task<IActionResult> Update(CategoryParameter categoryParameter, [FromRoute] Guid id)
     {
-        var User = await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!);
+        var user = await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!);
         try
         {
             await _categoryService.Update(new CategoryDto
             {
-                Name = categoryParams.Name,
+                Name = categoryParameter.Name,
                 Id = id,
-                UserId = User.Id
+                UserId = user.Id
+                
             });
             return Ok("Success");
         }
@@ -102,5 +103,15 @@ public class CategoryController : ControllerBase
         {
             return NotFound($"Category {id} is not found");
         }
+    }
+
+    [Authorize]
+    [HttpGet("api/categories/{id:guid}/products")]
+    public async Task<IActionResult> GetAllProducts([FromRoute] Guid id)
+    {
+        var user = await _authService.GetUserByHeader(Request.Headers[HeaderNames.Authorization]!);
+        var products = await _categoryService.GetAllProducts(id, user.Id);
+        return Ok(products.Select(x =>
+            new ProductResponse(x.Price, x.Title, x.Details,x.Id)));
     }
 }

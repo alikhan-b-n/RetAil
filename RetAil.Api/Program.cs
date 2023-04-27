@@ -24,8 +24,11 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductProvider, ProductProvider>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddDbContext<ApplicationContext>(x => 
-    x.UseInMemoryDatabase(builder.Configuration.GetConnectionString("InMemory")!));
+//builder.Services.AddDbContext<ApplicationContext>(x => 
+//    x.UseInMemoryDatabase(builder.Configuration.GetConnectionString("InMemory")!));
+
+builder.Services.AddDbContext<ApplicationContext>(x =>
+    x.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
 
 #region Jwt Configuration
 

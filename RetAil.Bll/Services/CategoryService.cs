@@ -24,7 +24,7 @@ public class CategoryService : ICategoryService
         var categoryEntity = new CategoryEntity
         {
             Name = categoryDto.Name,
-            UserEntity = userEntity
+            UserEntity = userEntity,
         };
 
         await _categoryProvider.Create(categoryEntity);
@@ -36,13 +36,17 @@ public class CategoryService : ICategoryService
     {
         try
         {
-            var category = await _categoryProvider.GetById(id); 
-            if(userId==category.UserEntity.Id) return new CategoryDto { Name = category.Name, Id = category.Id, UserId = category.UserEntity.Id };
-            throw new ArgumentException("You don't have access");
+            var category = await _categoryProvider.GetById(id);
+            if (category.UserEntity.Id != userId)
+            {
+                throw new ArgumentException("You don't have access");
+            }
+
+            return new CategoryDto { Name = category.Name, Id = category.Id, UserId = category.UserEntity.Id };
         }
-        catch
+        catch (ArgumentException e)
         {
-            throw new ArgumentException("error, not found");
+            throw new ArgumentException(e.Message);
         }
     }
 
@@ -57,15 +61,17 @@ public class CategoryService : ICategoryService
         try
         {
             var categoryEntity = await _categoryProvider.GetById(categoryDto.Id);
-            if(categoryEntity.UserEntity.Id == categoryDto.UserId)
+            if (categoryEntity.UserEntity.Id != categoryDto.UserId)
             {
-                categoryEntity.Name = categoryDto.Name;
-                await _categoryProvider.Update(categoryEntity);
+                throw new ArgumentException("You don't have access");
             }
+
+            categoryEntity.Name = categoryDto.Name;
+            await _categoryProvider.Update(categoryEntity);
         }
-        catch
+        catch (ArgumentException e)
         {
-            throw new ArgumentException("error");
+            throw new ArgumentException(e.Message);
         }
     }
 
@@ -74,11 +80,31 @@ public class CategoryService : ICategoryService
         try
         {
             var categoryEntity = await _categoryProvider.GetById(id);
-            if(categoryEntity.UserEntity.Id == userId) await _categoryProvider.Delete(id);
+            if (categoryEntity.UserEntity.Id != userId)
+            {
+                throw new ArgumentException("You don't have access");
+            }
+
+            await _categoryProvider.Delete(id);
         }
-        catch
+        catch (ArgumentException e)
         {
-            throw new ArgumentException("error");
+            throw new ArgumentException(e.Message);
+        }
+    }
+
+    public async Task<List<ProductDto>> GetAllProducts(Guid id, Guid userId)
+    {
+        try
+        {
+            var productsEntities = await _categoryProvider.GetAllProducts(id, userId);
+            return productsEntities.Select(x => new ProductDto
+                    { Details = x.Details, Id = x.Id, Price = x.Price, Title = x.Title, UserId = x.UserEntity.Id })
+                .ToList();
+        }
+        catch (ArgumentException e)
+        {
+            throw new ArgumentException(e.Message);
         }
     }
 }
