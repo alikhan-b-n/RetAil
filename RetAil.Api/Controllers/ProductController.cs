@@ -84,7 +84,8 @@ public class ProductController : ControllerBase
                 Title = productParameter.Title,
                 Details = productParameter.Details,
                 Price = productParameter.Price,
-                UserId = User.Id
+                UserId = User.Id,
+                CategoryId = productParameter.CategoryId
             });
             return Ok("Success");
         }

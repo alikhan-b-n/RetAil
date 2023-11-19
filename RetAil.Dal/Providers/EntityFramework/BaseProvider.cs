@@ -13,13 +13,14 @@ namespace RetAil.Dal.Providers.EntityFramework
         {
             _applicationContext = applicationContext;
             _dbSet=_applicationContext.Set<TEntity>();
-        }
+        } 
         
 
         public async Task Create(TEntity entity)
         {
             _dbSet.Add(entity);
-            await _applicationContext.SaveChangesAsync();        }
+            await _applicationContext.SaveChangesAsync();        
+        }
 
         public async Task<TEntity> GetById(Guid id)
         {

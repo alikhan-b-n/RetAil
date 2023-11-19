@@ -15,14 +15,14 @@ public class AuthController : ControllerBase
     {
         _authService = authService;
     }
-    
+
     [HttpPost("api/user/signup")]
     public async Task<IActionResult> Register([FromBody] UserSignUpViewModel userSignUpViewModel)
     {
         string success;
         try
         {
-            success= await _authService.SignUp(new UserSignUpDto
+            success = await _authService.SignUp(new UserSignUpDto
             {
                 Username = userSignUpViewModel.Username,
                 Login = userSignUpViewModel.Login,
@@ -33,6 +33,7 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Error");
         }
+
         return Ok(success);
     }
 
@@ -42,7 +43,7 @@ public class AuthController : ControllerBase
         string success;
         try
         {
-            success =await _authService.SignIn(new UserSignInDto
+            success = await _authService.SignIn(new UserSignInDto
             {
                 Login = userSignInViewModel.Login,
                 Password = userSignInViewModel.Password
@@ -52,13 +53,13 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Not found");
         }
+
         return Ok(success);
     }
-    
-    
+
+
     [Authorize]
     [HttpGet("api/user/get")]
-
     public async Task<IActionResult> GetUser()
     {
         try

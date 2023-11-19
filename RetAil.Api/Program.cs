@@ -1,10 +1,8 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using RetAil;
-using RetAil.Api.Controllers;
+using RetAil.Api;
 using RetAil.Bll.Services;
 using RetAil.Bll.Services.Abstract;
 using RetAil.Contracts.Options;
@@ -28,13 +26,14 @@ builder.Services.AddScoped<IProductService, ProductService>();
 //    x.UseInMemoryDatabase(builder.Configuration.GetConnectionString("InMemory")!));
 
 builder.Services.AddDbContext<ApplicationContext>(x =>
-    x.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
+    x.UseInMemoryDatabase(builder.Configuration.GetConnectionString("InMemory")));
 
 #region Jwt Configuration
 
 var secrets = builder.Configuration.GetSection("SecretOptions");
 
 var key = Encoding.ASCII.GetBytes(secrets.GetValue<string>("JWTSecret")!);
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

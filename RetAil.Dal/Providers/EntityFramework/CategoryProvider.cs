@@ -15,7 +15,7 @@ public class CategoryProvider : BaseProvider<CategoryEntity>, ICategoryProvider
 
     public async Task<List<CategoryEntity>> GetAllById(Guid id)
     {
-        return await _applicationContext.CategoryEntities.Where(x => x.UserEntity.Id == id).ToListAsync();
+        return await _applicationContext.CategoryEntities.Where(x  => x.UserEntity.Id == id).ToListAsync();
     }
 
     public async Task<List<ProductEntity>> GetAllProducts(Guid id, Guid userId)

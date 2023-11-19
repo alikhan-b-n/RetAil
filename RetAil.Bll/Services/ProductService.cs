@@ -22,7 +22,7 @@ public class ProductService : IProductService
     {
         var userEntity = await _userProvider.GetById(productDto.UserId);
         var categoryEntity = await _categoryProvider.GetById(productDto.CategoryId);
-        ProductEntity? productEntity = new ProductEntity
+        ProductEntity productEntity = new ProductEntity
         {
             Title = productDto.Title,
             Details = productDto.Details,
@@ -83,6 +83,7 @@ public class ProductService : IProductService
                 productEntity.Price = productDto.Price;
                 productEntity.Details = productDto.Details;
                 productEntity.Title = productDto.Title;
+                productEntity.CategoryEntity.Id = productDto.CategoryId;
                 await _productProvider.Update(productEntity);
             }
         }

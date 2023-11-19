@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace RetAil;
+namespace RetAil.Api;
 
 public class ConfigureServicesSwagger
 {

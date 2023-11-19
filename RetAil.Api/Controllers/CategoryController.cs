@@ -95,7 +95,6 @@ public class CategoryController : ControllerBase
                 Name = categoryParameter.Name,
                 Id = id,
                 UserId = user.Id
-                
             });
             return Ok("Success");
         }

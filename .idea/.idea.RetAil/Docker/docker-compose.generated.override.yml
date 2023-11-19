@@ -1,0 +1,23 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  RetAil:
+    build:
+      context: "/Users/alikhanbalkhashbayev/Desktop/programmimg/RiderProjects/RetAil/RetAil.Api"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net7.0/RetAil.Api.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "/Users/alikhanbalkhashbayev/.nuget/packages"
+      NUGET_FALLBACK_PACKAGES: "/Users/alikhanbalkhashbayev/.nuget/packages"
+    image: "retail-image:dev"
+    ports: []
+    volumes:
+    - "/Users/alikhanbalkhashbayev/.nuget/packages:/root/.nuget/fallbackpackages"
+    - "/Users/alikhanbalkhashbayev/Desktop/programmimg/RiderProjects/RetAil/RetAil.Api:/app:rw"
+    - "/Users/alikhanbalkhashbayev/Desktop/programmimg/RiderProjects/RetAil:/src:rw"
+    working_dir: "/app"

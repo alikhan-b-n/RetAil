@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Restoring dependencies and building the application...'
+                    bat 'dotnet restore'
+                    bat 'dotnet watch'
+                }
+            }
+        }
+
+    
+        stage('Deploy') {
+            steps {
+                script {
+                    echo 'Deploying the application...'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD pipeline successfully completed!'
+        }
+
+        failure {
+            echo 'CI/CD pipeline failed!'
+        }
+    }
+}
